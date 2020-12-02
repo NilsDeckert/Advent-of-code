@@ -1,0 +1,3 @@
+W:/Programmieren/Advent of code/cmake-build-debug/CMakeFiles/Advent_of_code.dir
+W:/Programmieren/Advent of code/cmake-build-debug/CMakeFiles/edit_cache.dir
+W:/Programmieren/Advent of code/cmake-build-debug/CMakeFiles/rebuild_cache.dir
