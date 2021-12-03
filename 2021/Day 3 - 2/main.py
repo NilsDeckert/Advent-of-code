@@ -9,14 +9,10 @@ def filter_bits(nums: list[str], b: bool) -> int:
                 count += 1
 
         if count >= len(nums) / 2:  # Mehrheit 1
-            for n in nums:
-                if (b and n[i] == "1") or (not b and n[i] == "0"):
-                    temp.append(n)
+            temp += [n for n in nums if (b and n[i] == "1") or (not b and n[i] == "0")]
 
         else:  # Mehrheit 0
-            for n in nums:
-                if (b and n[i] == "0") or (not b and n[i] == "1"):
-                    temp.append(n)
+            temp += [n for n in nums if (b and n[i] == "0") or (not b and n[i] == "1")]
 
         nums = temp
         if len(nums) == 1:
