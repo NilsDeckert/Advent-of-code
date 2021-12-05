@@ -49,20 +49,17 @@ def main(file: str) -> int:
             hit += [(x_i, y_a) for x_i in z]
         else:  # 45 Degree angle
 
-            if y_b > y_a:
-                y = np.arange(y_a, y_b + 1, 1, dtype=int)
-            else:
-                y = np.arange(y_b, y_a + 1, 1, dtype=int)
-                y = y[::-1]
+            # flip 'direction' if x/y value of b is smaller than x/y of a
+            x_n, y_n = 1, 1
+            if y_b < y_a:
+                y_n = -1
+            if x_b < x_a:
+                x_n = -1
 
-            if x_b > x_a:
-                x = np.arange(x_a, x_b + 1, 1, dtype=int)
-            else:
-                x = np.arange(x_b, x_a + 1, 1, dtype=int)
-                x = x[::-1]
+            y = range(y_a, y_b + y_n, y_n)
+            x = range(x_a, x_b + x_n, x_n)
 
-            for i in range(len(x)):
-                hit.append((x[i], y[i]))
+            hit += [(x_i, y_i) for x_i, y_i in zip(x, y)]
 
     return count_occurrences(hit)
 
