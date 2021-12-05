@@ -7,12 +7,11 @@ def parse_input(file: str) -> list[tuple]:
     with open(file, "r") as f:
         for line in f:
             num_a, num_b = line.strip().split(" -> ")
-            x_a, y_a = int(num_a.split(",")[0]), int(num_a.split(",")[1])
-            x_b, y_b = int(num_b.split(",")[0]), int(num_b.split(",")[1])
-            a = np.array([x_a,
-                          y_a])
-            b = np.array([x_b,
-                          y_b])
+            x_a, y_a = [int(a) for a in num_a.split(",")]
+            x_b, y_b = [int(b) for b in num_b.split(",")]
+
+            a = np.array([x_a, y_a])
+            b = np.array([x_b, y_b])
 
             lines.append((a, b))
     return lines
@@ -21,7 +20,6 @@ def parse_input(file: str) -> list[tuple]:
 def count_occurrences(l: list) -> int:
     res = Counter(l)
     new_dict = dict(filter(lambda elem: elem[1] > 1, res.items()))  # Filter arrays that occur more than once
-    print(new_dict)
     return len(new_dict)
 
 
@@ -29,38 +27,38 @@ def main(file: str) -> int:
     lines = parse_input(file)
     hit = []
     for line in lines:
-        start = line[0]
-        end = line[1]
 
-        if start[0] == end[0]:  # x_a == x_b
-            if end[1] > start[1]:
-                y = np.arange(start[1], end[1] + 1, 1, dtype=int)
-            else:
-                y = np.arange(end[1], start[1] + 1, 1, dtype=int)
+        x_a, y_a = line[0][0], line[0][1]
+        x_b, y_b = line[1][0], line[1][1]
 
-            for y_i in y:
-                hit.append((start[0], y_i))
+        # Either x or y value is the same, so use np.arange for the other value to get all points inbetween
+        if x_a == x_b:
+            a, b = y_a, y_b
+        elif y_a == y_b:
+            a, b = x_a, x_b
 
-        elif start[1] == end[1]:  # y_a == y_b
-            if end[0] > start[0]:
-                x = np.arange(start[0], end[0] + 1, 1, dtype=int)
-            else:
-                x = np.arange(end[0], start[0] + 1, 1, dtype=int)
+        # Make sure np.arange works properly
+        if b < a:
+            b, a = a, b
 
-            for x_i in x:
-                hit.append((x_i, start[1]))
+        z = np.arange(a, b + 1, 1, dtype=int)
+
+        if x_a == x_b:
+            hit += [(x_a, y_i) for y_i in z]
+        elif y_a == y_b:
+            hit += [(x_i, y_a) for x_i in z]
         else:  # 45 Degree angle
 
-            if end[1] > start[1]:
-                y = np.arange(start[1], end[1] + 1, 1, dtype=int)
+            if y_b > y_a:
+                y = np.arange(y_a, y_b + 1, 1, dtype=int)
             else:
-                y = np.arange(end[1], start[1] + 1, 1, dtype=int)
+                y = np.arange(y_b, y_a + 1, 1, dtype=int)
                 y = y[::-1]
 
-            if end[0] > start[0]:
-                x = np.arange(start[0], end[0] + 1, 1, dtype=int)
+            if x_b > x_a:
+                x = np.arange(x_a, x_b + 1, 1, dtype=int)
             else:
-                x = np.arange(end[0], start[0] + 1, 1, dtype=int)
+                x = np.arange(x_b, x_a + 1, 1, dtype=int)
                 x = x[::-1]
 
             for i in range(len(x)):
